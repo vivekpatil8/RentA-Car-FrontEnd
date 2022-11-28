@@ -1,8 +1,8 @@
 {
-  "defaultProject": "RentA-Car-FrontEnd",
+  "defaultProject": "RentACar-FrontEnd",
   "projects": {
-    "RentA-Car-FrontEnd": {
-      "name": "RentA-Car-FrontEnd",
+    "RentACar-FrontEnd": {
+      "name": "RentACar-FrontEnd",
       "integrations": {
         "capacitor": {}
       },
