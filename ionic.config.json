@@ -1,0 +1,12 @@
+{
+  "defaultProject": "RentA-Car-FrontEnd",
+  "projects": {
+    "RentACar-FrontEnd": {
+      "name": "RentA-Car-FrontEnd",
+      "integrations": {
+        "capacitor": {}
+      },
+      "type": "angular"
+    }
+  }
+}
