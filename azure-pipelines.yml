@@ -32,7 +32,6 @@ stages:
         npm install
         ionic build --prod
       displayName: 'ionic install and build'
-      workingDirectory: '$(Build.SourcesDirectory)/projectFolderName'
 
 
     - task: ArchiveFiles@2
