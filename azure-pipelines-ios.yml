@@ -1,0 +1,79 @@
+# Xcode
+# Build, test, and archive an Xcode workspace on macOS.
+# Add steps that install certificates, test, sign, and distribute an app, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/xcode
+
+trigger:
+- master
+
+pool:
+  vmImage: 'macos-12'
+
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:  
+  - job: Build_Server
+    displayName: Build_ios
+
+    variables:
+      sdk: 'iphoneos'
+      configuration: 'Release'
+      teamId : '96YU33LT3B'
+
+    steps: 
+    - task: InstallAppleCertificate@2
+      inputs:
+        certSecureFile: 'Dis_Certificates.p12'
+        certPwd: $(certpass)
+        keychain: 'temp'
+        deleteCert: true
+        
+        
+    - task: InstallAppleProvisioningProfile@1
+      inputs:
+        provisioningProfileLocation: 'secureFiles'
+        provProfileSecureFile: 'FlagshipInspect.mobileprovision'
+        removeProfile: true
+
+    - script: |                       #install ioinic and capacitor 
+        npm install i -g @ionic/cli
+        npm install @capacitor/core @capacitor/cli
+        ionic cap build ios --prod
+        cd ios/App/App
+        arch -x86_64 pod install
+
+    - task: Xcode@5 #Xcode build and archive task 
+      inputs:
+        actions: 'build archive'
+        scheme: 'App' 
+        sdk: '$(sdk)'
+        configuration: '$(configuration)'
+        xcWorkspacePath: '**/App.xcworkspace'
+        xcodeVersion: 13
+        # Package options
+        packageApp: true 
+        archivePath: 'output/$(SDK)/$(Configuration)/$(Build.Repository.ID).xcarchive'
+        exportPath: 'output/$(SDK)/$(Configuration)/'
+        exportOptions: 'specify'
+        exportMethod: 'ad-hoc'
+        exportTeamId: '$(teamId)'
+        # Signing & provisioning
+        signingOption: 'auto'
+        teamId: '$(teamId)'
+
+
+        
+       
+    - task: CopyFiles@2  #copy ipa files to artifact directory 
+      inputs:
+        contents: '**/*.ipa'
+        targetFolder: '$(build.artifactStagingDirectory)'
+        overWrite: true
+        flattenFolders: true
+
+    # - task: PublishPipelineArtifact@1
+    #   inputs:
+    #       targetPath: '$(Pipeline.Workspace)/a'
+    #       publishLocation: 'pipeline' 
