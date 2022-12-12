@@ -42,8 +42,8 @@ stages:
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
         replaceExistingArchive: true
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: drop'
-      inputs:
-          targetPath: '$(Pipeline.Workspace)/a'
-          publishLocation: 'pipeline'
+    # - task: PublishBuildArtifacts@1
+    #   displayName: 'Publish Artifact: drop'
+    #   inputs:
+    #       targetPath: '$(Pipeline.Workspace)/a'
+    #       publishLocation: 'pipeline'
